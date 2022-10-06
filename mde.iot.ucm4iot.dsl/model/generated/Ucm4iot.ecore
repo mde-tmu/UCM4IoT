@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ucm4iot" nsURI="http://www.iot.mde/ucm4iot/Ucm4iot" nsPrefix="ucm4iot">
+  <eClassifiers xsi:type="ecore:EClass" name="IoTUseCaseModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="standardMode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="useCases" upperBound="-1"
+        eType="#//UseCase" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UseCase">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="main" eType="#//MainScenario"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" eType="#//Extensions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="intent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" eType="#//Level"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiplicity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="precondition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="postcondition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="primaryActor" eType="#//PrimaryActor"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secondaryActors" upperBound="-1"
+        eType="#//SecondaryActor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="facilitatorActors" upperBound="-1"
+        eType="#//SecondaryActor" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExceptionalUseCase" eSuperTypes="#//UseCase"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HandlerUseCase" eSuperTypes="#//UseCase">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="handlerClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contextExceptions" upperBound="-1"
+        eType="#//ContextExceptionMapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MainScenario">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
+        eType="#//Step" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outcome" eType="#//OutcomeEnds"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Extensions">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
+        eType="#//ExtensionBlock" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionBlock">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refStep" eType="#//Step"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasRangedRef" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endRefStep" eType="#//Step"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
+        eType="#//Step" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outcome" eType="#//Outcome"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
+        eType="#//ExtensionBlock" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AlternateBlock" eSuperTypes="#//ExtensionBlock"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExceptionalBlock" eSuperTypes="#//ExtensionBlock"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Outcome"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutcomeEnds" eSuperTypes="#//Outcome">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//OutcomeEndings"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OutcomeContinues" eSuperTypes="#//Outcome">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="step" eType="#//Step"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Step">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ignoreDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InteractionStep" eSuperTypes="#//Step">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stepNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exception" eType="#//Exception"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InvocationStep" eSuperTypes="#//Step">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stepNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invokedUseCase" eType="#//UseCase"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionControlStep" eSuperTypes="#//Step"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Exception">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnvironmentException" eSuperTypes="#//Exception"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NetworkException" eSuperTypes="#//Exception"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HardwareException" eSuperTypes="#//Exception"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SoftwareException" eSuperTypes="#//Exception"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ContextExceptionMapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="context" eType="#//UseCase"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exception" eType="#//Exception"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Actor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrimaryActor" eSuperTypes="#//Actor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SecondaryActor" eSuperTypes="#//Actor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HumanActor" eSuperTypes="#//PrimaryActor #//SecondaryActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SoftwareActor" eSuperTypes="#//PrimaryActor #//SecondaryActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DeviceActor" eSuperTypes="#//SecondaryActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PhysicalEntityActor" eSuperTypes="#//SecondaryActor"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="Level">
+    <eLiterals name="SUMMARY" literal="SUMMARY"/>
+    <eLiterals name="USER_GOAL" value="1" literal="USER_GOAL"/>
+    <eLiterals name="SUBFUNCTION" value="2" literal="SUB_FUNCTION"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OutcomeEndings">
+    <eLiterals name="SUCCESS" literal="SUCCESS"/>
+    <eLiterals name="FAILURE" value="1" literal="FAILURE"/>
+    <eLiterals name="DEGRADED" value="2" literal="DEGRADED"/>
+    <eLiterals name="ABANDONED" value="3" literal="ABANDONED"/>
+  </eClassifiers>
+</ecore:EPackage>

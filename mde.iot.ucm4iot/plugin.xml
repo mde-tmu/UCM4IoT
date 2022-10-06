@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="mde.iot.ucm4iot.instantiateucm4iotFile"
+            name="Instantiate UCM4IoT File">
+      </command>
+      <command
+            id="mde.iot.ucm4iot.generateexceptiontable"
+            name="Generate Exception Table">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="mde.iot.ucm4iot"
+               label="UCM4IoT">
+            <command
+                  commandId="mde.iot.ucm4iot.instantiateucm4iotFile"
+                  id="mde.iot.ucm4iot.menu."
+                  label="Instantiate UCM4IoT File"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="mde.iot.ucm4iot.handlers.InstantiateUCM4IoTFileHandler"
+            commandId="mde.iot.ucm4iot.instantiateucm4iotFile">
+      </handler>
+      <handler
+            class="mde.iot.ucm4iot.handlers.GenerateExceptionTableHandler"
+            commandId="mde.iot.ucm4iot.generateexceptiontable">
+      </handler>
+      <handler
+            class="mde.iot.ucm4iot.handlers.GenerateExceptionTableCommand"
+            commandId="mde.iot.ucm4iot.generateexceptiontable">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="mde.iot.ucm4iot.ucm4iotwizards"
+            class="mde.iot.ucm4iot.wizards.UCM4IoTFileWizard"
+            id="mde.iot.ucm4iot.ucm4iotfilewizard"
+            name="UCM4IoT File Wizard">
+      </wizard>
+      <category
+            id="mde.iot.ucm4iot.ucm4iotwizards"
+            name="UCM4IoT Wizards">
+      </category>
+      <wizard
+            category="mde.iot.ucm4iot.ucm4iotwizards"
+            class="mde.iot.ucm4iot.wizards.UCM4IoTProjectWizard"
+            id="mde.iot.ucm4iot.ucm4iotprojectwizard"
+            name="UCM4IoT Project">
+      </wizard>
+   </extension>
+
+
+</plugin>

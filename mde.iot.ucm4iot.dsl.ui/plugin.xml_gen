@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension
+		point="org.eclipse.ui.editors">
+		<editor
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="ucmiot"
+			id="mde.iot.ucm4iot.Ucm4iot"
+			name="Ucm4iot Editor">
+		</editor>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
+			<activeWhen>
+				<reference
+					definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			commandId="mde.iot.ucm4iot.Ucm4iot.validate">
+			<activeWhen>
+				<reference
+					definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+		<!-- copy qualified name -->
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
+			<activeWhen>
+				<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened" />
+			</activeWhen>
+		</handler>
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
+			<activeWhen>
+				<and>
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.XtextEditor.opened" />
+					<iterate>
+						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+					</iterate>
+				</and>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+			<and>
+				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="mde.iot.ucm4iot.Ucm4iot"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+		<definition id="mde.iot.ucm4iot.Ucm4iot.XtextEditor.opened">
+			<and>
+				<reference definitionId="isXtextEditorActive"/>
+				<with variable="activeEditor">
+					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
+						value="mde.iot.ucm4iot.Ucm4iot"
+						forcePluginActivation="true"/>
+				</with>
+			</and>
+		</definition>
+	</extension>
+	<extension
+			point="org.eclipse.ui.preferencePages">
+		<page
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot"
+			name="Ucm4iot">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.coloring"
+			name="Syntax Coloring">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.templates"
+			name="Templates">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+	</extension>
+	<extension
+			point="org.eclipse.ui.propertyPages">
+		<page
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot"
+			name="Ucm4iot">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension
+		point="org.eclipse.ui.keywords">
+		<keyword
+			id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"
+			label="Ucm4iot"/>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Trigger expensive validation"
+			id="mde.iot.ucm4iot.Ucm4iot.validate"
+			name="Validate">
+		</command>
+		<!-- copy qualified name -->
+		<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+		</command>
+		<command
+			id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+			categoryId="org.eclipse.ui.category.edit"
+			description="Copy the qualified name for the selected element"
+			name="Copy Qualified Name">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command
+				commandId="mde.iot.ucm4iot.Ucm4iot.validate"
+				style="push"
+				tooltip="Trigger expensive validation">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<!-- copy qualified name -->
+		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:edit?after=copy">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="popup:org.eclipse.xtext.ui.outline?after=additions">
+			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+				style="push" tooltip="Copy Qualified Name">
+				<visibleWhen checkEnabled="false">
+					<and>
+						<reference definitionId="mde.iot.ucm4iot.Ucm4iot.XtextEditor.opened" />
+						<iterate>
+							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
+						</iterate>
+					</and>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			commandId="org.eclipse.xtext.ui.editor.FindReferences">
+			<activeWhen>
+				<reference
+					definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type
+			base-type="org.eclipse.core.runtime.text"
+			file-extensions="ucmiot"
+			id="mde.iot.ucm4iot.Ucm4iot.contenttype"
+			name="Ucm4iot File"
+			priority="normal">
+		</content-type>
+	</extension>
+	<!-- adding resource factories -->
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="ucmiot">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+		<resourceServiceProvider
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			uriExtension="ucmiot">
+		</resourceServiceProvider>
+	</extension>
+	<!-- marker definitions for mde.iot.ucm4iot.Ucm4iot -->
+	<extension
+			id="ucm4iot.check.fast"
+			name="Ucm4iot Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.fast"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="ucm4iot.check.normal"
+			name="Ucm4iot Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.normal"/>
+		<persistent value="true"/>
+	</extension>
+	<extension
+			id="ucm4iot.check.expensive"
+			name="Ucm4iot Problem"
+			point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.xtext.ui.check.expensive"/>
+		<persistent value="true"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.validator.preferencePage"
+			name="Errors/Warnings">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.xtext.builder.participant">
+		<participant
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="ucmiot"/>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.compiler.preferencePage"
+			name="Compiler">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.compiler.propertyPage"
+			name="Compiler">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+			<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
+			<command
+				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
+				id="mde.iot.ucm4iot.Ucm4iot.OpenGeneratedCode"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened" />
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
+			<activeWhen>
+				<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened" />
+			</activeWhen>
+		</handler>
+	</extension>
+	<!-- Quick Outline -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+			<activeWhen>
+				<reference
+					definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Open the quick outline."
+			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+			name="Quick Outline">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+				style="push"
+				tooltip="Open Quick Outline">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<!-- quickfix marker resolution generator for mde.iot.ucm4iot.Ucm4iot -->
+	<extension
+			point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="mde.iot.ucm4iot.dsl.ui.ucm4iot.check.fast">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="mde.iot.ucm4iot.dsl.ui.ucm4iot.check.normal">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+		<markerResolutionGenerator
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="mde.iot.ucm4iot.dsl.ui.ucm4iot.check.expensive">
+			<attribute
+				name="FIXABLE_KEY"
+				value="true">
+			</attribute>
+		</markerResolutionGenerator>
+	</extension>
+	<!-- Rename Refactoring -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
+			<activeWhen>
+				<reference
+					definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.edit">
+			<command commandId="org.eclipse.xtext.ui.refactoring.RenameElement"
+				style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="mde.iot.ucm4iot.Ucm4iot.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="mde.iot.ucm4iot.Ucm4iot"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="mde.iot.ucm4iot.Ucm4iot.refactoring"
+			name="Refactoring">
+			<keywordReference id="mde.iot.ucm4iot.ui.keyword_Ucm4iot"/>
+		</page>
+	</extension>
+	<extension point="org.eclipse.compare.contentViewers">
+		<viewer id="mde.iot.ucm4iot.Ucm4iot.compare.contentViewers"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="ucmiot">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="mde.iot.ucm4iot.Ucm4iot.contenttype"
+			contentViewerId="mde.iot.ucm4iot.Ucm4iot.compare.contentViewers" />
+	</extension>
+	<extension point="org.eclipse.compare.contentMergeViewers">
+		<viewer id="mde.iot.ucm4iot.Ucm4iot.compare.contentMergeViewers"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="ucmiot" label="Ucm4iot Compare">
+		</viewer>
+		<contentTypeBinding
+			contentTypeId="mde.iot.ucm4iot.Ucm4iot.contenttype"
+			contentMergeViewerId="mde.iot.ucm4iot.Ucm4iot.compare.contentMergeViewers" />
+	</extension>
+	<extension point="org.eclipse.ui.editors.documentProviders">
+		<provider id="mde.iot.ucm4iot.Ucm4iot.editors.documentProviders"
+			class="mde.iot.ucm4iot.ui.Ucm4iotExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+			extensions="ucmiot">
+		</provider>
+	</extension>
+	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+			extension="ucmiot"
+			type="text">
+		</fileTypes>
+	</extension>
+</plugin>

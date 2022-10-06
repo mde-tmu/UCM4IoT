@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: mde.iot.ucm4iot.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: mde.iot.ucm4iot.tests.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-14
+Automatic-Module-Name: mde.iot.ucm4iot.tests
+Bundle-ActivationPolicy: lazy

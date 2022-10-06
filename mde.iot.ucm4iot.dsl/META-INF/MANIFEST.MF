@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: mde.iot.ucm4iot.dsl
+Bundle-ManifestVersion: 2
+Bundle-Name: mde.iot.ucm4iot.dsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: mde.iot.ucm4iot.dsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: mde.iot.ucm4iot.parser.antlr,
+ mde.iot.ucm4iot.ucm4iot,
+ mde.iot.ucm4iot.generator,
+ mde.iot.ucm4iot.validation,
+ mde.iot.ucm4iot.ucm4iot.util,
+ mde.iot.ucm4iot,
+ mde.iot.ucm4iot.serializer,
+ mde.iot.ucm4iot.ucm4iot.impl,
+ mde.iot.ucm4iot.services,
+ mde.iot.ucm4iot.scoping,
+ mde.iot.ucm4iot.parser.antlr.internal
+Import-Package: org.apache.log4j

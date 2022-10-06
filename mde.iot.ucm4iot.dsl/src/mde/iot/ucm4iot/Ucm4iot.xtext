@@ -1,0 +1,256 @@
+grammar mde.iot.ucm4iot.Ucm4iot with org.eclipse.xtext.common.Terminals
+
+generate ucm4iot "http://www.iot.mde/ucm4iot/Ucm4iot"
+
+/* Root Grammar */
+
+IoTUseCaseModel:
+	({IoTUseCaseModel} '!' KeywordStandardMode ':' (standardMode?='on' | 'off') )?
+	(useCases+=UseCase)*;
+
+/* Use Case Grammars */
+
+UseCase:
+	(ExceptionalUseCase | HandlerUseCase)
+	KeywordMainSuccessScenario ':' main=MainScenario
+	(KeywordExtensions ':' extensions=Extensions)?;
+
+ExceptionalUseCase:
+	KeywordExceptionalUseCase ':' name=ID
+	((KeywordScope        ':'  scope=ID)              &
+	(KeywordIntention     ':'  intent=STRING)         &
+	(KeywordLevel         ':'  level=Level)           &
+	(KeywordMultiplicity  ':'  multiplicity=STRING) ? &
+	(KeywordPrecondition  ':'  precondition=STRING) ? &
+	(KeywordPostcondition ':'  postcondition=STRING)? &
+	(KeywordPrimaryActor  ':' 
+		((NotApplicable | None) | (primaryActor=PrimaryActor))) &
+	(KeywordSecondaryActor ':' 
+		((NotApplicable | None) | (secondaryActors+=SecondaryActor (',' secondaryActors+=SecondaryActor)*)))? &
+	(KeywordFacilitatorActor ':'
+		((NotApplicable | None) | (facilitatorActors+=SecondaryActor (',' facilitatorActors+=SecondaryActor)*)))?);
+
+HandlerUseCase:
+	KeywordHandlerUseCase ':'  name=ID
+	((KeywordScope        ':'  scope=ID)              &
+	(KeywordIntention     ':'  intent=STRING)         &
+	(KeywordLevel         ':'  level=Level)           &
+	(KeywordMultiplicity  ':'  multiplicity=STRING) ? &
+	(KeywordPrecondition  ':'  precondition=STRING) ? &
+	(KeywordPostcondition ':'  postcondition=STRING)? &
+	(KeywordPrimaryActor  ':' 
+		((NotApplicable | None) | (primaryActor=PrimaryActor))) &
+	(KeywordSecondaryActor ':' 
+		((NotApplicable | None) | (secondaryActors+=SecondaryActor (',' secondaryActors+=SecondaryActor)*)))? &
+	(KeywordFacilitatorActor ':'
+		((NotApplicable | None) | (facilitatorActors+=SecondaryActor (',' facilitatorActors+=SecondaryActor)*)))? &
+	(KeywordHandlerClass ':'
+		((NotApplicable | None) | handlerClass=ID))? &
+	(KeywordContextException ':' 
+		contextExceptions+=ContextExceptionMapping (',' contextExceptions+=ContextExceptionMapping)*));
+
+/* Main Success Scenario Grammars */
+
+MainScenario:
+	(steps+=Step)+ outcome=OutcomeEnds;
+
+/* Extension Grammars */
+
+Extensions:
+	(blocks+=ExtensionBlock)+;
+
+ExtensionBlock:
+	(AlternateBlock | ExceptionalBlock);
+
+AlternateBlock:
+	KeywordAlternateBlock 'for' (refStep=[Step|StepNumber] | (hasRangedRef?='(' refStep=[Step|StepNumber] '-' endRefStep=[Step|StepNumber] ')')) ':'
+	(steps+=Step)+
+	(outcome=Outcome | (KeywordChildListBegins ':' (blocks+=ExtensionBlock)+ KeywordChildListEnds));
+
+ExceptionalBlock:
+	KeywordExceptionalBlock 'for' (refStep=[Step|StepNumber] | (hasRangedRef?='(' refStep=[Step|StepNumber] '-' endRefStep=[Step|StepNumber] ')')) ':'
+	(steps+=Step)+
+	(outcome=Outcome | (KeywordChildListBegins ':' (blocks+=ExtensionBlock)+ KeywordChildListEnds));
+
+/* Outcome Grammars */
+
+Outcome: (OutcomeEnds | OutcomeContinues);
+
+OutcomeEnds:
+	(KeywordOutcomeEnds ':' type=OutcomeEndings);
+OutcomeContinues:
+	(KeywordOutcomeCont ':' step=[Step|StepNumber]);
+
+/* Step Grammars */
+// TODO: separate ConditionControlStep into ConditionStep and ControlFlowStep rules.
+// TODO: add grouped steps.
+// - involves adding unique grammar elements to either type of step.
+
+Step: (InteractionStep | InvocationStep | ConditionControlStep);
+
+InteractionStep:
+	stepNumber=StepNumber '.' (exception=Exception)?
+	(description=STRING | ignoreDescription?=IGNORE_STRING);
+InvocationStep:
+	stepNumber=StepNumber '.' '[' (invokedUseCase=[UseCase|ID]) ']'
+	(description=STRING | ignoreDescription?=IGNORE_STRING);
+ConditionControlStep:
+	(description=STRING | ignoreDescription?=IGNORE_STRING);
+
+/* Step Number Grammars */
+// TODO: evolve grammar to include other types of steps.
+
+StepNumber: (MainStepNumber | ExtensionStepNumber);
+
+GroupedSteps: '(' MainStepNumber '-' MainStepNumber ')';
+MainStepNumber:
+	INT ('.' INT)*;
+ExtensionStepNumber:
+	(MainStepNumber | GroupedSteps) ID
+	('.' INT ID?)*;
+
+/* Exception Grammars */
+
+Exception: 
+	(EnvironmentException | NetworkException | HardwareException | SoftwareException);
+
+EnvironmentException: '{' KeywordEnvironmentException '::' name=ID '}';
+NetworkException:     '{' KeywordNetworkException     '::' name=ID '}';
+HardwareException:    '{' KeywordHardwareException    '::' name=ID '}';
+SoftwareException:    '{' KeywordSoftwareException    '::' name=ID '}';
+
+/* Context and Exception Grammars */
+
+ContextExceptionMapping:
+	(context=[UseCase|ID] '{' KeywordException '::' exception=[Exception] '}');
+
+/* Actor Grammars */
+
+Actor: (PrimaryActor | SecondaryActor);
+
+PrimaryActor:
+	(HumanActor | SoftwareActor | name=ID);
+SecondaryActor:
+	(HumanActor | SoftwareActor | DeviceActor | PhysicalEntityActor | name=ID);
+
+HumanActor:          'HUMAN'                                    '::' name=ID;
+SoftwareActor:       'SOFTWARE'                                 '::' name=ID;
+DeviceActor:         ('SENSOR' | 'ACTUATOR' | 'TAG' | 'READER') '::' name=ID;
+PhysicalEntityActor: 'PHYSICAL_ENTITY'                          '::' name=ID;
+
+/* Keyword Grammars */
+
+KeywordStandardMode:
+	('Standard' | 'standard')
+	('Mode' | 'mode');
+
+KeywordExceptionalUseCase: 
+	('Use' | 'use')
+	('Case' | 'case');
+KeywordHandlerUseCase:
+	('Handler' | 'handler')
+	('Use' | 'use')
+	('Case' | 'case');
+
+
+KeywordScope:
+	('Scope' | 'scope');
+KeywordIntention:
+	('Intention' | 'intention');
+KeywordLevel: 
+	('Level' | 'level');
+KeywordMultiplicity:
+	('Multiplicity' | 'multiplicity');
+KeywordPrecondition:
+	('Precondition'  | 'precondition');
+KeywordPostcondition:
+	('Postcondition' | 'postcondition');
+
+
+KeywordHandlerClass:
+	('Handler' | 'handler')
+	('Class' | 'class');
+KeywordContextException:
+	('Contexts' | 'contexts')
+	('And' | 'and')
+	('Exceptions' | 'exceptions');
+
+
+KeywordMainSuccessScenario:
+	('Main' | 'main')
+	('Success' | 'success')?
+	('Scenario' | 'scenario')?;
+KeywordExtensions:
+	('Extensions' | 'extensions');
+
+
+KeywordAlternateBlock: 
+	('Alternative' | 'alternative');
+KeywordExceptionalBlock:
+	('Exception' | 'exception');
+KeywordStepExceptionalBlock:
+	('Step' | 'step') ('-')
+	('Level' | 'level')
+	('Exception' | 'exception');
+KeywordSceneExceptionBlock:
+	('Scene' | 'scene') ('-')
+	('Level' | 'level')
+	('Exception' | 'exception');
+
+KeywordChildListBegins:
+	('Nested' | 'nested')
+	('Extensions' | 'extensions')
+	('Begin' | 'begin');
+KeywordChildListEnds:
+	('Nested' | 'nested')
+	('Extensions' | 'extensions')
+	('Ends' | 'ends');
+
+
+KeywordPrimaryActor:
+	('Primary' | 'primary')
+	('Actor' | 'actor');
+KeywordSecondaryActor:
+	('Secondary' | 'secondary')
+	('Actor' | 'actor');
+KeywordFacilitatorActor: 
+	('Facilitator' | 'facilitator')
+	('Actor' | 'actor');
+
+
+KeywordException: (KeywordEnvironmentException | KeywordNetworkException | KeywordHardwareException | KeywordSoftwareException);
+KeywordEnvironmentException: 'ENVIRONMENT_EXCEPTION';
+KeywordNetworkException:     'NETWORK_EXCEPTION';
+KeywordHardwareException:    'HARDWARE_EXCEPTION';
+KeywordSoftwareException:    'SOFTWARE_EXCEPTION';
+
+
+KeywordOutcomeEnds:
+	('Use' | 'use')
+	('Case' | 'case')
+	('Ends' | 'ends')
+	('In' | 'in');
+KeywordOutcomeCont:
+	('Use' | 'use')
+	('Case' | 'case')
+	('Continues' | 'continues')
+	('At' | 'at')
+	('Step' | 'step');
+
+/* Enumerable values */
+
+enum Level:
+	SUMMARY='SUMMARY' | USER_GOAL='USER_GOAL' | SUBFUNCTION='SUB_FUNCTION';
+
+enum OutcomeEndings:
+	SUCCESS='SUCCESS' | FAILURE='FAILURE' | DEGRADED='DEGRADED' | ABANDONED='ABANDONED';
+
+/* Terminal Elements */
+
+terminal IGNORE_STRING:
+    '#' -> '#';
+
+/* Common Grammar Elements */
+
+None: 'None' | 'none';
+NotApplicable: 'N/A' | 'n/a';

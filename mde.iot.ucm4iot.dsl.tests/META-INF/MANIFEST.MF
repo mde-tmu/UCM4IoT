@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: mde.iot.ucm4iot.dsl.tests
+Bundle-ManifestVersion: 2
+Bundle-Name: mde.iot.ucm4iot.dsl.tests
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: mde.iot.ucm4iot.dsl.tests; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: mde.iot.ucm4iot.dsl,
+ org.junit.jupiter.api;bundle-version="[5.1.0,6.0.0)",
+ org.eclipse.xtext.testing,
+ org.eclipse.xtext.xbase.testing,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: mde.iot.ucm4iot.tests;x-internal=true
