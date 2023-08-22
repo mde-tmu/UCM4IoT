@@ -1,0 +1,29 @@
+
+!Standard mode: on
+
+use case: SampleUseCase
+scope: SampleSystem
+level: USER_GOAL
+intention: ""
+multiplicity: ""
+primary actor: SampleActor
+main success scenario:
+	"Repeat step 1 as many times as needed."        // Control-flow step
+	1. "SampleActor sends information to system."   // Interaction step
+	2. [SampleInvokedUseCas] "Invoked a use case"  // Invocation step
+	use case ends in: SUCCESS
+extensions:
+	alternative for 1:
+		1a. "System cannot receive information from SampleActor."
+		use case ends in: FAILURE
+		
+		
+use case: SampleInvokedUseCase
+scope: SampleSystem
+level: USER_GOAL
+intention: ""
+multiplicity: ""
+primary actor: SampleActor
+main success scenario:
+	1. "SampleActor sends information to system."  // Interaction step
+	use case ends in: SUCCESS

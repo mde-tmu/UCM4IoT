@@ -1,0 +1,278 @@
+
+!Standard mode: on
+
+/* Summary Level Use Case */
+
+use case: UseOnlineCafeteriaServices
+scope: OnlineCafeteria
+level: SUMMARY
+intention: "The intention of the Employee is to manage his menu orders with the online cafeteria to make 
+	sure he will get catered lunch on workdays when he does not have time to prepare his own lunch."
+multiplicity: "Multiple Employees can manage their menu orders with the online cafeteria at a given time. A given
+	Employee can only have one active session with the online cafeteria."
+primary actor: Employee
+main success scenario:
+	1. [Authenticate] "Employee authenticates with the system."
+	2. "System provides the list of active orders of the employee to Employee."
+	3. [PlaceNewMenuOrder] "Employee proceeds to place a new menu order."
+	"Step 3 can be repeated as many times as desired."
+	4. "Employee informs System that they wish to logout."
+	5. "System informs Employee of successful logout."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 2:
+		2a. "System cannot authenticate Employee."
+		use case ends in: FAILURE
+	alternative for 4:
+		4a. "Employee forgets to logout of System."
+		4a.1. "System informs Employee that they were logged out due to inactivity."
+		use case ends in: SUCCESS
+
+
+use case: PlaceNewMenuOrder
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The intention of the Employee is to place a new menu order for a specific day."
+multiplicity: "Multiple Employees can place new menu orders at a given time. A given Employee can only place one
+	order at a time."
+primary actor: Employee
+main success scenario:
+	1. "Employee requests available menus from System for a specific date."
+	2. "System provides available menus for a specific date to Employee."
+	3. "Employee informs System what menu he wants to order for a specific date, and in what quantity, and what
+		customization option he chooses."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 3:
+		3a. "Employee does not find any menu they desires to order in the System."
+		use case ends in: FAILURE
+	alternative for 3:
+		3b. "Employee works for several companies that are registered with the online cafeteria and employee did not specify
+			a preferred cafeteria location previously with the System."
+		3b.1. "System requests Employee to provide preferred cafeteria location."
+		3b.2. "Employee provides preferred cafeteria information to System."
+		use case continues at step: 3
+
+
+use case: ModifyExistingMenuOrder
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The intention of the Employee is to modify or cancel one of his existing menu orders."
+multiplicity: "Many Employees can modify or cancel their existing menu orders at a given time. A given Employee
+	can only modify one of his existing orders at a time."
+primary actor: Employee
+main success scenario:
+	1. "Employee informs System that he wants to modify an existing order (update the quantity or customization options
+		of a menu, or cancel)."
+	2. "System acknowledges modification to Employee."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 2:
+		2a. "System informs Employee that order cannot be modified / cancelled any more."
+		use case ends in: FAILURE
+
+
+use case: Authenticate
+scope: OnlineCafeteria
+level: SUB_FUNCTION
+intention: "The intention of the Person is to authenticate with the System."
+multiplicity: "Multiple Employees can authenticate simultaneously. A given Employee can only authenticate once at
+	a given time."
+primary actor: Person  // can be Employee or Caterer, but not Visitor.
+main success scenario:
+	1. "Person provides user name and password to System."
+	2. "System validates user name and password."
+	3. "System informs Person of successful login."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 2:
+		2a. "System ascertains that the user name or password is unknown or wrong."
+		2a.1. "System prompts Person to try again."
+		nested extensions begin: 
+			alternative for 2a.1:
+				2a.1a. "Person types correct password."
+				use case continues at step: 1
+			alternative for 2a.1:
+				2a.1b. "System ascertains that Person entered a wrong password for the third time in a row."
+				2a.1b.1. "System informs Person that his/her account is now blocked."
+				use case ends in: FAILURE
+		nested extensions ends
+	alternative for 2:
+		2b. "System ascertains that the Person's account is blocked."
+		2b.1. "System informs Person of situation."
+		use case ends in: FAILURE
+
+/* Summary Level Use Case */
+
+use case: ProvideMenusToOnlineCafeteriaCustomers
+scope: OnlineCafeteria
+level: SUMMARY
+intention: "The intention of the Caterer is to regularly provide catered menus for the employees of
+	companies that registered with the online cafeteria."
+multiplicity: "Multiple Caterers can provide menus for online cafeteria customers concurrently."
+primary actor: Caterer
+main success scenario:
+	1. [Authenticate] "Caterer authenticates with system."
+	"Step 2 can be repeated as many times as desired."
+	2. [SuggestMenus] "Caterer suggests possible menus."
+	3. "Caterer informs System that he wishes to logout."
+	4. "System informs Caterer of successful logout."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 1:
+		1a. "Caterer does not have an account with the system."
+		1a.1. "Caterer informs System that he wishes to register, providing registration details."
+		1a.2. "System confirms registration to Caterer."
+		use case continues at step: 2
+	alternative for 2:
+		2a. "Caterer is not able to authenticate with the System."
+		use case ends in: FAILURE
+	alternative for 3:
+		3a. "Caterer forgets to logout of System."
+		3a.1. "System informs Caterer that he was logged out due to inactivity."
+		use case ends in: SUCCESS
+
+
+use case: SuggestMenus
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The intention of the Caterer is to suggest possible menus for the online cafeteria."
+multiplicity: "Multiple Caterers can suggest menus at a given time. A given caterer cannot suggest menus concurrently."
+primary actor: Caterer
+main success scenario:
+	"Step 1 and 2 can be repeated as many times as desired."
+	1. "Caterer informs System of a menu (name, and possible configuration options, including a description of the
+		ingredients, the price and the amount of days the order needs to be placed in advance) that he offers to prepare, and until
+		when the offer is valid."
+	2. "System acknowledges receipt of the offer to Caterer."
+	use case ends in: SUCCESS
+
+
+use case: ConsultOrders
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The intention of the Caterer is to consult the number of orders of his menus that have been
+	placed for a specific day to determine whether or not he needs to order additional ingredients."
+multiplicity: "Multiple Caterers can consult orders at a given time. A given caterer consults orders sequentially."
+primary actor: Caterer
+main success scenario:
+	1. "Caterer communicates to the System the date for which he wants to consult the orders."
+	2. "System informs Caterer about the orders (number, and configuration options) that were placed for the Caterers
+		menus on the specified date."
+	use case ends in: SUCCESS
+
+
+use case: PickupMenuOrder
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "intention of the Employee is to pickup his customized catered lunch on a specific day."
+multiplicity: "Only one Employee can pickup his lunch at a given time."
+primary actor: Employee
+secondary actor: EmployeeCardReader, BarcodeScanner, CompanySalarySystem, ExternalPaymentSystem, Display, Caterer, Cashier
+main success scenario:
+	1. "In the early morning, System sends Caterer the detailed list of menus (including quantities and configuration
+		options) that have been ordered for the current day."
+	"Caterer prepares the menu orders, packs them in lunch boxes, labels them, and delivers them to the location of the
+		cafeteria on the companies premises by 11am. Employee goes to cafeteria to pickup his menu order, and passes his card
+		over the EmployeeCardReader."
+	2. "EmployeeCardReader informs System about the employee who wants to pickup his menu order."
+	3. "System displays employee name and name of ordered menu to cashier on Display."
+	"Cashier finds the lunch box with the employee’s name on it."
+	4. "BarcodeScanner informs System about the ordered menu that is being picked up."
+	5. "System displays price of menu order on Display."
+	6. [ProcessPayment] "System processes payment."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 2:
+		"Employee does not pickup his menu order by the end of the day."
+		2a. "System instructs CompanySalarySystem to subtract the cost for the not picked up menu from the employee’s
+			salary. Use case ends in failure."
+		use case ends in: FAILURE
+	alternative for 3:
+		"Employee has not placed an order for the current date."
+		3a. "System notifies Cashier and Employee by means of the Display that no menu orders had been placed for the
+			current date."
+		use case ends in: FAILURE
+	alternative for 4:
+		"Cashier can not find the customers lunch box."
+		4a. "Cashier informs System that menu order has disappeared."
+		use case ends in: FAILURE
+
+
+use case: ProcessPayment
+scope: OnlineCafeteria
+level: SUB_FUNCTION
+intention: "The system needs to process payment for a menu order."
+multiplicity: "Multiple payments might have to be processed concurrently."
+primary actor: N/A  // IMPORTANT: the System cannot be an actor.
+secondary actor: ExternalPaymentSystem, BarcodeScanner, Display, EmployeeCardReader, Person
+main success scenario:
+	1. "System notifies ExternalPaymentSystem of the amount due."
+	"At this point, the employee/visitor might want to buy additional drinks, snacks, etc. for his lunch. The handling of
+		those items is done by the external payment system."
+	2. "ExternalPaymentSystem notifies System that the full amount has been paid."
+	use case ends in: SUCCESS
+extensions:
+	alternative for 2:
+		2a. "ExternalPaymentSystem notifies System that external payment for the lunch (and any additional amount due to
+			purchases of drinks, snacks, etc.) was not completed successfully in its entirety, and about the remaining amount due."
+		2a.1. "System requests CompanySalarySystem to debit the remaining amount from the employee’s salary."
+		nested extensions begin:
+			alternative for 2a.1:
+				2a.1a. "Person identified themselves as an employee."
+				use case ends in: SUCCESS
+			alternative for 2a.1:
+				2a.1b. "Person has not identified himself as an employee."
+				2a.1b.1. "System requests identification of employee by means of the Display."
+				nested extensions begin:
+					alternative for 2a.1b.1:
+						2a.1b.1a. "EmployeeCardReader informs System about the employee who wants to pay."
+						use case continues at step: 2a.1
+					alternative for 2a.1b.1:
+						2a.1b.1b. "Cashier requests System to cancel the sale. The menu order and snacks, if any, are put back on Display."
+						use case ends in: FAILURE
+				nested extensions ends
+		nested extensions ends
+		
+
+use case: SellAbandonedMenus
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The intention of the Cashier after 2:30pm each day is to sell the menus of employees who
+	forgot to pick up their orders in order to not let food go to waste for half price to visitors or employees that forgot to
+	order their menus in advance."
+multiplicity: "Multiple Cashiers can sell abandoned menus simultaneously. One Cashier can take care of at most one
+	sale at a time."
+primary actor: Cashier
+secondary actor: Person, BarcodeScanner, Display
+main success scenario:
+	"After 2:30pm, Visitor or Employee tells Cashier that he would like to buy an abandoned menu. Cashier picks up the
+		abandoned menu and scans its barcode."
+	1. "BarcodeScanner informs System which menu order is being bought."
+	2. "System displays discounted price on Display."
+	3. [ProcessPayment] "System processes payment."
+	use case ends in: SUCCESS
+
+	
+use case: RegisterCompany
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The CompanyAdministrator wants to register his company with the online cafeteria in order
+	to offer catered lunch service to the companies employees."
+multiplicity: ""
+primary actor: N/A
+main success scenario:
+	1.^ ""
+	use case ends in: SUCCESS
+
+
+use case: PayCaterer
+scope: OnlineCafeteria
+level: USER_GOAL
+intention: "The Caterer wants to receive payment for the menu orders he prepared and delivered to the
+	companies cafeteria."
+multiplicity: ""
+primary actor: N/A
+main success scenario:
+	1.^ ""
+	use case ends in: SUCCESS
